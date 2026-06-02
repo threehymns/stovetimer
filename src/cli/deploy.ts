@@ -13,6 +13,7 @@ export async function deployUnits(name: string, scope: 'user' | 'system', timers
 
   console.log(`🔧 Generating systemd files in ${targetDir}...`);
 
+  // Step 1: Generate and write all files to disk
   for (const [id, options] of timers.entries()) {
     const baseName = `${name}-${id}`;
     const rawSchedules = Array.isArray(options.every) ? options.every : [options.every];
@@ -35,10 +36,18 @@ export async function deployUnits(name: string, scope: 'user' | 'system', timers
     await Bun.write(join(targetDir, `${baseName}.timer`), timerContent);
 
     console.log(`✅ Created files for task: ${id}`);
+  }
+
+  // Step 2: Tell systemd to read the newly written files into memory
+  console.log('🔄 Reloading systemd daemon to register new units...');
+  await reloadDaemon(scope);
+
+  // Step 3: Now that systemd is aware of them, enable and start the timers
+  for (const id of timers.keys()) {
+    const baseName = `${name}-${id}`;
     await enableTimer(baseName, scope);
     console.log(`🚀 Enabled and started timer: ${baseName}.timer`);
   }
 
-  await reloadDaemon(scope);
   console.log('\n🌟 All timers deployed and synchronized successfully!');
 }
