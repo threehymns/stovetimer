@@ -1,6 +1,6 @@
 # 🍲 stovetimer
 
-`stovetimer` is a fast, lightweight TypeScript framework that lets you write, sandbox, and manage native Linux **systemd timers** using friendly, human-readable language like `12min`, `4h`, or `at 6:00am`. 
+`stovetimer` is a fast, lightweight TypeScript framework that lets you write, sandbox, and manage native Linux **systemd timers** using friendly, human-readable language like `15min`, `every Friday at 5pm`, or `May 5th`. 
 
 Powered by **Bun**, it bypasses heavy dependency trees, runs natively without transpilation steps, and introduces a global command-line helper to monitor your tasks from anywhere on your system.
 
@@ -11,6 +11,7 @@ Powered by **Bun**, it bypasses heavy dependency trees, runs natively without tr
 Traditional background schedulers like `cron` are fragile—if your laptop or homelab machine is asleep when a job is scheduled, it gets missed entirely. Plus, tracking down error logs across scattered system files is a headache.
 
 `stovetimer` offloads scheduling to **systemd** (the reliable core of Linux), giving you enterprise-grade infrastructure out of the box:
+* **Zero-Dependency Natural Language:** Write schedules in plain English without bloating your `node_modules` with massive calendar parsing libraries.
 * **Missed Job Recovery:** Automatically runs missed tasks immediately if your machine was powered down or sleeping.
 * **Built-in Security Sandboxing:** Easily lock down tasks so they can't touch sensitive system folders or device layers.
 * **Centralized Logging:** Pipes all output straight into Linux `journald` for seamless log tracking.
@@ -52,7 +53,7 @@ const app = new Stovetimer({
   scope: 'user' // Installs to ~/.config/systemd/user/ (No root/sudo privileges required!)
 });
 
-// Example 1: Run a task every 15 minutes using shorthands
+// Example 1: Run a task every 15 minutes using an interval shorthand
 app.timer('db-vacuum', {
   every: '15 min',
   persistent: true, // Recovers and runs if the system was offline
@@ -67,9 +68,20 @@ app.timer('db-vacuum', {
   }
 });
 
-// Example 2: Run a task every morning at a specific time
+// Example 2: Run a task on specific days of the week
+app.timer('weekly-backup', {
+  every: 'every Friday at 5pm',
+  service: {
+    description: 'Archive project directories before the weekend',
+    run: () => {
+      console.log("Compressing files...");
+    }
+  }
+});
+
+// Example 3: Run a task daily using absolute clock times
 app.timer('morning-sync', {
-  every: 'at 6:00am',
+  every: 'at 6:00am', // Also supports 'midnight', 'noon', etc.
   service: {
     description: 'Fetch remote system updates',
     run: () => {
@@ -94,28 +106,27 @@ Run these flags directly on your task definition script to register or alter sys
 
 * **Deploy & Activate**
 Compiles your shorthands, builds the physical systemd files, and schedules them.
+
 ```bash
 bun tasks.ts deploy
 
 ```
 
-
 * **Force Execution**
 Forces the specific task execution logic to run out-of-band instantly for debugging.
+
 ```bash
-bun tasks.ts run db-vacuum
+bun tasks.ts run morning-sync
 
 ```
 
-
 * **Teardown & Clean**
 Stops the timer loops, disables the units, and deletes the physical files cleanly.
+
 ```bash
 bun tasks.ts clean
 
 ```
-
-
 
 ### 2. Global System Commands
 
@@ -123,20 +134,19 @@ Once your apps are deployed, you can close your project folders entirely. Instal
 
 * **Check System Health Dashboard**
 Queries active configurations, checks active states, and tracks down real-time countdown variables.
+
 ```bash
 stovetimer status
 
 ```
 
-
 * **Stream Live Logs**
 Streams target system journal messages directly into the console pipe without filtering messy syslog blocks.
+
 ```bash
 stovetimer logs morning-sync
 
 ```
-
-
 
 ---
 
