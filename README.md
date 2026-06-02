@@ -45,7 +45,7 @@ bun i -g stovetimer
 
 Create an entry script for your automated tasks (e.g., `tasks.ts`):
 
-```typescript
+```ts
 import { Stovetimer } from 'stovetimer';
 
 const app = new Stovetimer({
