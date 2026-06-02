@@ -1,6 +1,6 @@
 {
   "name": "stovetimer",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A human-readable systemd timer automation framework powered by Bun",
   "author": "threehymns",
   "license": "MIT",
