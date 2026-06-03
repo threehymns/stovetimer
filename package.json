@@ -1,48 +1,48 @@
 {
-  "name": "stovetimer",
-  "version": "0.1.0",
-  "description": "A human-readable systemd timer automation framework powered by Bun",
-  "author": "threehymns",
-  "license": "MIT",
-  "keywords": [
-    "systemd",
-    "timer",
-    "automation",
-    "bun",
-    "typescript"
-  ],
-  "homepage": "https://github.com/threehymns/stovetimer#readme",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./src/index.ts",
-  "type": "module",
-  "files": [
-    "dist",
-    "src",
-    "README.md",
-    "LICENSE"
-  ],
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "types": "./src/index.ts"
-    }
-  },
-  "bin": {
-    "stovetimer": "./dist/bin.js"
-  },
-  "scripts": {
-    "build": "rm -rf dist && bun run build.ts",
-    "example:deploy": "bun run ./example.ts deploy",
-    "example:clean": "bun run ./example.ts clean",
-    "example:status": "bun run ./example.ts status",
-    "test": "bun test",
-    "prepublishOnly": "bun run build && bun test"
-  },
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  }
+	"name": "stovetimer",
+	"version": "0.1.0",
+	"description": "A human-readable systemd timer automation framework powered by Bun",
+	"author": "threehymns",
+	"license": "MIT",
+	"keywords": [
+		"systemd",
+		"timer",
+		"automation",
+		"bun",
+		"typescript"
+	],
+	"homepage": "https://github.com/threehymns/stovetimer#readme",
+	"main": "./dist/index.js",
+	"module": "./dist/index.js",
+	"types": "./src/index.ts",
+	"type": "module",
+	"files": [
+		"dist",
+		"src",
+		"README.md",
+		"LICENSE"
+	],
+	"exports": {
+		".": {
+			"import": "./dist/index.js",
+			"types": "./src/index.ts"
+		}
+	},
+	"bin": {
+		"stovetimer": "./dist/bin.js"
+	},
+	"scripts": {
+		"build": "rm -rf dist && bun run build.ts",
+		"example:deploy": "bun run ./example.ts deploy",
+		"example:clean": "bun run ./example.ts clean",
+		"example:status": "bun run ./example.ts status",
+		"test": "bun test",
+		"prepublishOnly": "bun run build && bun test"
+	},
+	"devDependencies": {
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	}
 }

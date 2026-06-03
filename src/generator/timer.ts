@@ -5,7 +5,7 @@ export function generateTimerINI(schedules: string[], options: TimerOptions, bas
   const persistent = options.persistent ? 'Persistent=true' : 'Persistent=false';
   const randomizedDelay = options.randomizedDelaySec ? `RandomizedDelaySec=${options.randomizedDelaySec}` : '';
 
-  return `[Unit]
+	return `[Unit]
 Description=Timer for ${options.service.description}
 
 [Timer]

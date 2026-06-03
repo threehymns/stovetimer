@@ -9,11 +9,11 @@ const app = new Stovetimer({
 // Using the clean shorthand strings we built
 app.timer('garbage-collection', {
   every: '4h',
-  persistent: true,
-  service: {
+	persistent: true,
+	service: {
     description: 'Run automatic file system garbage collection logs',
     protectSystem: 'strict',
-    run: () => {
+		run: () => {
       console.log(`[${new Date().toLocaleTimeString()}] Vacuuming stale temporary metrics...`);
     }
   }
@@ -21,9 +21,9 @@ app.timer('garbage-collection', {
 
 app.timer('morning-sync', {
   every: 'at 6:00am',
-  service: {
+	service: {
     description: 'Fetch remote configurations on wakeup',
-    run: async () => {
+		run: async () => {
       console.log('Syncing infrastructure profiles...');
     }
   }
