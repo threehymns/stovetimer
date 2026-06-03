@@ -1,4 +1,4 @@
-import { expect, test, describe } from "bun:test";
+import { describe, expect, test } from "bun:test";
 import { parseSchedule } from "../src/parser/schedule";
 
 describe("Schedule Shorthand Parser", () => {
@@ -7,7 +7,9 @@ describe("Schedule Shorthand Parser", () => {
 			expect(parseSchedule("hourly")).toBe("hourly");
 			expect(parseSchedule("daily")).toBe("daily");
 			expect(parseSchedule("*-*-* 12:00:00")).toBe("*-*-* 12:00:00");
-      expect(parseSchedule("Mon..Fri *-*-* 00:00:00")).toBe("Mon..Fri *-*-* 00:00:00");
+			expect(parseSchedule("Mon..Fri *-*-* 00:00:00")).toBe(
+				"Mon..Fri *-*-* 00:00:00",
+			);
 		});
 	});
 
@@ -82,7 +84,9 @@ describe("Schedule Shorthand Parser", () => {
 
 	describe("Error Handling", () => {
 		test("should throw an error on unrecognizable input", () => {
-      expect(() => parseSchedule("whenever the server feels like it")).toThrow();
+			expect(() =>
+				parseSchedule("whenever the server feels like it"),
+			).toThrow();
 			expect(() => parseSchedule("every lightyear")).toThrow();
 			expect(() => parseSchedule("Friday at 25:00pm")).toThrow();
 		});

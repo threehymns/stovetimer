@@ -1,10 +1,14 @@
-import type { TimerOptions } from '../core/engine';
+import type { TimerOptions } from "../core/engine";
 
-export function generateServiceINI(id: string, options: TimerOptions, appName: string): string {
+export function generateServiceINI(
+	id: string,
+	options: TimerOptions,
+	_appName: string,
+): string {
 	const scriptPath = Bun.argv[1];
-  const bunPath = Bun.env._ || 'bun';
-  const protectSystem = options.service.protectSystem ?? 'false';
-  const privateTmp = options.service.privateTmp ? 'true' : 'false';
+	const bunPath = Bun.env._ || "bun";
+	const protectSystem = options.service.protectSystem ?? "false";
+	const privateTmp = options.service.privateTmp ? "true" : "false";
 
 	return `[Unit]
 Description=${options.service.description}

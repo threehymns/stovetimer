@@ -1,4 +1,6 @@
-import { handleCLI } from '../cli/router';
+import { handleCLI } from "../cli/router";
+import type { Scheduler } from "./scheduler";
+import { SystemdScheduler } from "./systemd-scheduler";
 
 export interface TimerOptions {
 	every: string | string[];
@@ -6,7 +8,7 @@ export interface TimerOptions {
 	randomizedDelaySec?: string;
 	service: {
 		description: string;
-    protectSystem?: 'strict' | 'full' | 'false';
+		protectSystem?: "strict" | "full" | "false";
 		privateTmp?: boolean;
 		run: () => Promise<void> | void;
 	};
@@ -14,25 +16,37 @@ export interface TimerOptions {
 
 interface StovetimerConfig {
 	name: string;
-  scope?: 'user' | 'system';
+	scope?: "user" | "system";
+	scheduler?: Scheduler;
 }
 
 export class Stovetimer {
 	private timers = new Map<string, TimerOptions>();
 	private name: string;
-  private scope: 'user' | 'system';
+	private scope: "user" | "system";
+	private scheduler: Scheduler;
 
 	constructor(config: StovetimerConfig) {
 		this.name = config.name;
-    this.scope = config.scope ?? 'user';
+		this.scope = config.scope ?? "user";
+		this.scheduler =
+			config.scheduler ?? new SystemdScheduler(this.name, this.scope);
 	}
 
 	timer(id: string, options: TimerOptions) {
 		this.timers.set(id, options);
 	}
 
-  async start() {
-    await handleCLI(this, this.name, this.scope, this.timers);
+	async start(argv?: string[]) {
+		const args = argv ?? Bun.argv.slice(2);
+		await handleCLI(
+			this,
+			this.name,
+			this.scope,
+			this.timers,
+			this.scheduler,
+			args,
+		);
 	}
 
 	async executeTask(id: string) {

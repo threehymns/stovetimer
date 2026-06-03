@@ -1,15 +1,18 @@
-import { expect, test, describe } from "bun:test";
+import { describe, expect, test } from "bun:test";
+import type { TimerOptions } from "../src/core/engine";
 import { generateServiceINI } from "../src/generator/service";
 import { generateTimerINI } from "../src/generator/timer";
 
 describe("Unit Configuration Generator", () => {
 	test("should output structured service file", () => {
-    const options: any = {
+		const options: TimerOptions = {
+			every: "15 min",
 			service: {
 				description: "Test task execution",
 				protectSystem: "strict",
-        privateTmp: true
-      }
+				privateTmp: true,
+				run: () => {},
+			},
 		};
 		const result = generateServiceINI("test-task", options, "test-app");
 		expect(result).toContain("[Service]");
@@ -19,10 +22,14 @@ describe("Unit Configuration Generator", () => {
 	});
 
 	test("should output a structured timer file matching inputs", () => {
-    const options: any = {
+		const options: TimerOptions = {
+			every: "15 min",
 			persistent: true,
 			randomizedDelaySec: "5m",
-      service: { description: "Test description" }
+			service: {
+				description: "Test description",
+				run: () => {},
+			},
 		};
 		const result = generateTimerINI(["*:0/15"], options, "test-app-test-task");
 		expect(result).toContain("[Timer]");
