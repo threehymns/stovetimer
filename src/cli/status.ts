@@ -22,9 +22,14 @@ export async function showStatus(name: string, scope: 'user' | 'system', timers:
       if (line.startsWith('SubState=')) subState = line.split('=')[1] || 'unknown';
       if (line.startsWith('NextElapseUSecRealtime=')) {
         const val = line.split('=')[1];
-        if (val && val !== '0' && val !== '') {
+        
+        if (val && val !== '0' && val !== '' && val !== 'n/a' && val !== 'infinity') {
           const microsecs = parseInt(val, 10);
-          nextRun = new Date(microsecs / 1000).toLocaleString();
+          if (!Number.isNaN(microsecs)) {
+            nextRun = new Date(microsecs / 1000).toLocaleString();
+          } else {
+            nextRun = val; // Fallback to raw string if parsing fails
+          }
         } else {
           nextRun = '\x1b[90mInactive / Waiting\x1b[0m';
         }
